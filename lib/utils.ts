@@ -18,7 +18,7 @@ export function formatCurrency(amount: number): string {
 export function formatDate(dateString: string, formatStr: string = 'MMM d, yyyy'): string {
   try {
     return format(parseISO(dateString), formatStr);
-  } catch (error) {
+  } catch {
     return dateString;
   }
 }

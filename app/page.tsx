@@ -15,11 +15,10 @@ import {
   LineChart,
   Line,
 } from 'recharts';
-import { ArrowUpRight, ArrowDownRight, DollarSign, Wallet } from 'lucide-react';
+import { ArrowUpRight, ArrowDownRight, Wallet } from 'lucide-react';
 import { transactions, categories } from '@/data/mockData';
 import { formatCurrency, formatDate } from '@/lib/utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { AddExpenseModal } from '@/components/AddExpenseModal';
 
 const monthlyData = [
@@ -33,21 +32,22 @@ const monthlyData = [
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
-  
+
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 
   const currentMonthTransactions = transactions.filter(t => t.date.startsWith('2023-10'));
-  
+
   const totalIncome = currentMonthTransactions
     .filter(t => t.type === 'income')
     .reduce((acc, curr) => acc + curr.amount, 0);
-    
+
   const totalExpense = currentMonthTransactions
     .filter(t => t.type === 'expense')
     .reduce((acc, curr) => acc + curr.amount, 0);
-    
+
   const balance = totalIncome - totalExpense;
 
   const expenseByCategory = categories
@@ -164,7 +164,7 @@ export default function Home() {
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
                     <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#6b7280' }} dy={10} />
                     <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#6b7280' }} />
-                    <Tooltip 
+                    <Tooltip
                       cursor={{ fill: '#f9fafb' }}
                       contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                     />
@@ -199,8 +199,8 @@ export default function Home() {
                         <Cell key={`cell-${index}`} fill={entry.color} />
                       ))}
                     </Pie>
-                    <Tooltip 
-                      formatter={(value: number) => formatCurrency(value)}
+                    <Tooltip
+                      formatter={(value: unknown) => typeof value === 'number' ? formatCurrency(value) : value as string}
                       contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                     />
                   </PieChart>
@@ -244,7 +244,7 @@ export default function Home() {
                       <td className="px-4 py-4 font-medium text-gray-900">{tx.description}</td>
                       <td className="px-4 py-4">
                         {category && (
-                          <span 
+                          <span
                             className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium"
                             style={{ backgroundColor: `${category.colorCode}15`, color: category.colorCode }}
                           >
